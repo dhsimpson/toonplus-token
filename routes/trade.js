@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const {token} = require('./utils/token');
+const {erc20} = require('../erc20/erc20')
 
 //wbtTkCd 웹툰토큰 고유 코드
 //buyerAddr 매수자 지갑주소
@@ -19,9 +18,14 @@ router.post('/sell', (req,res) => {
     //응답으로는 매도 요청이 제대로 들어갔는 지 여부
 });
 
-// 실제 거래가 이뤄지는 로직 (토큰 전송)
-const transfer = async(body) => {
-    token.transfer(body);
-}
+
+router.post('/transfer', (req,res) => {
+    const contractAddr = req.body.contractAddr;
+    const fromAddr = req.body.fromAddr;
+    const fromPk = req.body.fromPk;
+    const toAddr = req.body.toAddr;
+    const amount = req.body.amount;
+    erc20.transferFrom(res, contractAddr, fromAddr, fromPk, toAddr, amount);
+})
 
 module.exports = router;
